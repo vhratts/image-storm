@@ -1,0 +1,61 @@
+{
+    "sample": {
+        "width": 300,
+        "height": 720,
+        "background": "#ffff"
+    },
+    "components": [
+        {
+            "overlay": 0,
+            "position": {
+                "x": 0,
+                "y": 0
+            },
+            "size": {
+                "width": 300,
+                "height": 100
+            },
+            "collors": {
+                "background": null,
+                "content": "#292929"
+            },
+            "content": {
+                "type": "text",
+                "content": "Texto no componente de imagem"
+            }
+        },
+        {
+            "overlay": 2,
+            "position": {
+                "x": 300,
+                "y": 0
+            },
+            "size": {
+                "width": 300,
+                "height": 100
+            },
+            "collors": {
+                "background": "#689c59"
+            },
+            "content": {
+                "type": "image/png",
+                "content": "data:image/png;base64,..."
+            }
+        },
+        {
+            "overlay": 1,
+            "position": {
+                "x": 600,
+                "y": 0
+            },
+            "size": {
+                "width": 300,
+                "height": 100
+            },
+            "content": {
+                "type": "image/png",
+                "content": "https://url-da-imagem.com/imagem.png"
+            }
+        }
+    ]
+}
