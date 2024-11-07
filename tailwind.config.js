@@ -9,10 +9,10 @@ export default {
         './resources/**/*.blade.php',
         './resources/**/*.js',
         './resources/**/*.vue',
-        './vendor/wireui/wireui/src/*.php',
-        './vendor/wireui/wireui/ts/**/*.ts',
-        './vendor/wireui/wireui/src/WireUi/**/*.php',
-        './vendor/wireui/wireui/src/Components/**/*.php'
+        './wireui/wireui/src/*.php',
+        './wireui/wireui/ts/**/*.ts',
+        './wireui/wireui/src/WireUi/**/*.php',
+        './wireui/wireui/src/Components/**/*.php'
     ],
     theme: {
         extend: {
