@@ -23,8 +23,13 @@ class ApplicationController extends Controller
 
         // Verifica se o arquivo existe
         if (File::exists($filePath)) {
-            // Retorna o arquivo com o tipo correto (mime type)
-            return Response::file($filePath);
+            // Obtém o MIME type dinamicamente
+            $mimeType = mime_content_type($filePath);
+
+            // Retorna o arquivo com o tipo MIME correto
+            return Response::file($filePath, [
+                'Content-Type' => $mimeType
+            ]);
         }
 
         return abort(404);
