@@ -4,7 +4,7 @@
  * Manually route assets to be found
  */
 
-//  var_dump($_GET);
+ var_dump($_GET);
 
 if ($_GET['type'] === 'css') {
     header("Content-type: text/css; charset: UTF-8");
