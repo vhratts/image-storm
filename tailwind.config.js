@@ -2,9 +2,9 @@ import defaultTheme from 'tailwindcss/defaultTheme';
 
 /** @type {import('tailwindcss').Config} */
 export default {
-    presets: [require('./vendor/wireui/wireui/tailwind.config.js')],
+    presets: [require('./wireui/wireui/tailwind.config.js')],
     content: [
-        './vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php',
+        // './vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php',
         './storage/framework/views/*.php',
         './resources/**/*.blade.php',
         './resources/**/*.js',
