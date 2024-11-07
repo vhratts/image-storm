@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+// use Illuminate\Http\Response;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Str;
-use Illuminate\View\View;
 
 class ApplicationController extends Controller
 {
