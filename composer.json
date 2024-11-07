@@ -56,8 +56,7 @@
         ],
         "vercel": [
             "@php -v",
-            "npm -v",
-            "@php artisan migrate --graceful --ansi"
+            "npm -v"
         ]
     },
     "extra": {
