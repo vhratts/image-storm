@@ -74,7 +74,11 @@ class ImageEditorController extends Controller
             ];
 
             $backgroundResponse = $client->post(env("IW_PROVIDER", "https://image-wizard-eight.vercel.app") . "/api/image/create?_token={$token}", [
-                'json' => $layout
+                'json' => [
+                    "width" => 720,
+                    "height" => 300,
+                    "color" => "#9b28ed"
+                ]
             ]);
 
             $background = $backgroundResponse->getBody()->getContents();
