@@ -35,7 +35,7 @@
 
             <h2>Utilização da API</h2>
             <h3>Endpoint</h3>
-            <p><code>POST /api/image-editor</code></p>
+            <p><code>POST /api-service/image-editor</code></p>
 
             <h3>Parâmetros</h3>
             <p>A requisição deve ser enviada no corpo como <code>application/json</code> e conter os seguintes
@@ -126,7 +126,7 @@
     }</code></pre>
 
             <h3>Exemplo de Uso com cURL</h3>
-            <pre><code>curl -X POST "http://localhost:8000/api/image-editor" \
+            <pre><code>curl -X POST "http://localhost:8000/api-service/image-editor" \
     -H "Content-Type: application/json" \
     -d '{
         "sample": {

@@ -61,9 +61,11 @@
 
 ## Utilização da API
 
-### Endpoint
+### Endpoints
 
-**POST** `/api/image-editor`
+**GET** `/api-service` => DEMO
+
+**POST** `/api-service/image-editor` => Production
 
 ### Parâmetros
 
@@ -159,7 +161,7 @@ A API retornará uma imagem PNG no corpo da resposta com o `Content-Type: image/
 Para consumir a API, um exemplo em cURL é mostrado abaixo:
 
 ```bash
-curl -X POST "http://localhost:8000/api/image-editor" \
+curl -X POST "http://localhost:8000/api-service/image-editor" \
 -H "Content-Type: application/json" \
 -d '{
     "sample": {
