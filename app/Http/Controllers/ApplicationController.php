@@ -248,21 +248,9 @@ class ApplicationController extends Controller
 
     public function addBase64ImageToCanvasComponent($image, $base64String, $position, $size)
     {
-        $image = base64_encode($image);
-        $token = Str::random();
-
-        if(!is_string($base64String)){
-            $base64String = base64_encode($base64String);
-        }
-
-        // Teste para saber se a imagen retorna base64
-        // dd([
-        //     "baseImageBuffer" => $image,
-        //     "overlayImageBuffer" => $base64String,
-        //     "x" => $position['x'],
-        //     "y" => $position['y'],
-        // ]);
-
+        $image          = base64_encode($image);
+        $base64String   = base64_encode($this->resizeImage($base64String, $size['width'], $size['height']));
+        $token          = Str::random();
 
         $client = new Client();
         $response = $client->post(env("IW_PROVIDER", "https://image-wizard-eight.vercel.app") . "/api/image/overlay?_token={$token}", [
@@ -299,9 +287,6 @@ class ApplicationController extends Controller
                 "fontSize" => $size['width'],
                 "x" => $position['x'],
                 "y" => $position['y'] + $fontSize,
-            ],
-            'headers' => [
-                'Accept' => 'image/png',
             ]
         ]);
 
@@ -310,5 +295,18 @@ class ApplicationController extends Controller
         }
 
         return null;
+    }
+
+    private function resizeImage(string $imageBase64, int $width, int $height) {
+        $client = new Client();
+        $response = $client->post(env("IW_PROVIDER", "https://image-wizard-eight.vercel.app") . "/api/image/resize", [
+            'json' => [
+                "imageBuffer" =>  $imageBase64,
+                "width" => $width,
+                "height" => $height
+            ]
+        ]);
+
+        return $response->getBody()->getContents();
     }
 }
