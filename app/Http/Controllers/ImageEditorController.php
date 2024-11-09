@@ -68,6 +68,11 @@ class ImageEditorController extends Controller
             $client = new Client();
             $token = Str::random();
 
+            $enviromet  = ($client->get("https://img.shields.io/badge/enviroment-Laravel-red"))->getBody()->getContents();
+            $deploy     = ($client->get("https://img.shields.io/badge/deployment-Vercel-black"))->getBody()->getContents();
+            $version     = ($client->get("https://img.shields.io/badge/Version-0.0.3-green"))->getBody()->getContents();
+
+
             $backgroundResponse = $client->post(env("IW_PROVIDER", "https://image-wizard-eight.vercel.app") . "/api/image/create?_token={$token}", [
                 'json' => [
                     "width" => 720,
@@ -79,7 +84,7 @@ class ImageEditorController extends Controller
             $background = $backgroundResponse->getBody()->getContents();
             $logo = File::get(public_path("app.png"));
 
-            $overlay01Response = $client->post(env("IW_PROVIDER", "https://image-wizard-eight.vercel.app") . "/api/image/create?_token={$token}", [
+            $imageResponse = $client->post(env("IW_PROVIDER", "https://image-wizard-eight.vercel.app") . "/api/image/overlay?_token={$token}", [
                 'json' => [
                     "baseImageBuffer" => base64_encode($background),
                     "overlayImageBuffer" => base64_encode($logo),
@@ -88,7 +93,34 @@ class ImageEditorController extends Controller
                 ]
             ]);
 
-            return Response::make($overlay01Response->getBody()->getContents(), 200, ['Content-Type' => 'image/png']);
+            $imageResponse = $client->post(env("IW_PROVIDER", "https://image-wizard-eight.vercel.app") . "/api/image/overlay?_token={$token}", [
+                'json' => [
+                    "baseImageBuffer" => base64_encode($imageResponse->getBody()->getContents()),
+                    "overlayImageBuffer" => base64_encode($enviromet),
+                    "x" => 240,
+                    "y" => 150
+                ]
+            ]);
+
+            $imageResponse = $client->post(env("IW_PROVIDER", "https://image-wizard-eight.vercel.app") . "/api/image/overlay?_token={$token}", [
+                'json' => [
+                    "baseImageBuffer" => base64_encode($imageResponse->getBody()->getContents()),
+                    "overlayImageBuffer" => base64_encode($deploy),
+                    "x" => 240,
+                    "y" => 200
+                ]
+            ]);
+
+            $imageResponse = $client->post(env("IW_PROVIDER", "https://image-wizard-eight.vercel.app") . "/api/image/overlay?_token={$token}", [
+                'json' => [
+                    "baseImageBuffer" => base64_encode($imageResponse->getBody()->getContents()),
+                    "overlayImageBuffer" => base64_encode($version),
+                    "x" => 240,
+                    "y" => 250
+                ]
+            ]);
+
+            return Response::make($imageResponse->getBody()->getContents(), 200, ['Content-Type' => 'image/png']);
         }
     }
 }
