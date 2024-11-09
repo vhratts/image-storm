@@ -1,6 +1,6 @@
 <p align="center">
 <a href="#" target="_blank" style="display: flex; justify-content: center;">
-<img src="public/app.png" width="400" alt="logo" style="width: 80px;">
+<img src="https://image-storm.vercel.app/api-service"  alt="logo" style="width: 700px;">
 </a>
 </p>
 

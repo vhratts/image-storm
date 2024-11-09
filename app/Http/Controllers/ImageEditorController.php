@@ -68,9 +68,12 @@ class ImageEditorController extends Controller
             $client = new Client();
             $token = Str::random();
 
+            $now = now();
+
             $enviromet  = ($client->get("https://img.shields.io/badge/enviroment-Laravel-red.png"))->getBody()->getContents();
             $deploy     = ($client->get("https://img.shields.io/badge/deployment-Vercel-black.png"))->getBody()->getContents();
-            $version     = ($client->get("https://img.shields.io/badge/Version-0.0.3-green.png"))->getBody()->getContents();
+            $version    = ($client->get("https://img.shields.io/badge/version-0.0.3-green.png"))->getBody()->getContents();
+            $dateTime   = ($client->get("https://img.shields.io/badge/[Data|Hora]-[{$now}]-orange.png"))->getBody()->getContents();
 
 
             $backgroundResponse = $client->post(env("IW_PROVIDER", "https://image-wizard-eight.vercel.app") . "/api/image/create?_token={$token}", [
@@ -97,7 +100,7 @@ class ImageEditorController extends Controller
                 'json' => [
                     "baseImageBuffer" => base64_encode($imageResponse->getBody()->getContents()),
                     "overlayImageBuffer" => base64_encode($enviromet),
-                    "x" => 100,
+                    "x" => 150,
                     "y" => 200
                 ]
             ]);
@@ -115,8 +118,17 @@ class ImageEditorController extends Controller
                 'json' => [
                     "baseImageBuffer" => base64_encode($imageResponse->getBody()->getContents()),
                     "overlayImageBuffer" => base64_encode($version),
-                    "x" => 500,
+                    "x" => 450,
                     "y" => 200
+                ]
+            ]);
+
+            $imageResponse = $client->post(env("IW_PROVIDER", "https://image-wizard-eight.vercel.app") . "/api/image/overlay?_token={$token}", [
+                'json' => [
+                    "baseImageBuffer" => base64_encode($imageResponse->getBody()->getContents()),
+                    "overlayImageBuffer" => base64_encode($dateTime),
+                    "x" => 300,
+                    "y" => 250
                 ]
             ]);
 
