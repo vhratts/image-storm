@@ -68,7 +68,7 @@ class ImageEditorController extends Controller
             $client = new Client();
             $token = Str::random();
 
-            $now = now();
+            $now = date("Y_m_d_H:i:s");
 
             $enviromet  = ($client->get("https://img.shields.io/badge/enviroment-Laravel-red.png"))->getBody()->getContents();
             $deploy     = ($client->get("https://img.shields.io/badge/deployment-Vercel-black.png"))->getBody()->getContents();
