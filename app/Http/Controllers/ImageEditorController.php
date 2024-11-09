@@ -42,6 +42,19 @@ class ImageEditorController extends Controller
         }
     }
 
+    public function CreateImage(Request $request) {
+        $request->validate([
+            'payload' => 'required'
+        ]);
+
+        $payload = base64_decode($request->payload);
+        $body = json_decode($payload, true);
+        $body['driver'] = $request->driver ?? 'image-wizard';
+
+        $requestBody = (new Request())->merge($body);
+        return $this->editImage($requestBody);
+    }
+
 
 
     public function MimeTest()

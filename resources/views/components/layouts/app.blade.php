@@ -18,6 +18,7 @@
         @endif
         <wireui:scripts />
         <script src="//unpkg.com/alpinejs" defer></script>
+        <script defer src="https://umami-liart-ten.vercel.app/script.js" data-website-id="9d99d634-032c-4709-a898-c7d1f7df89de"></script>
     </head>
     <body class="font-sans antialiased dark:bg-black dark:text-white/50 app-body">
         <div class="app-content">

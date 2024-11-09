@@ -10,4 +10,5 @@ Route::get('/assets/{any}', [ApplicationController::class, 'ApiAssetController']
 Route::prefix("/api-service")->group(function(){
     Route::any('/', [ImageEditorController::class, 'MimeTest']);
     Route::post('/image-editor', [ImageEditorController::class, 'editImage']);
+    Route::get('/image-creator', [ImageEditorController::class, 'CreateImage']);
 });
