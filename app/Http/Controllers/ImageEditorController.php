@@ -82,14 +82,14 @@ class ImageEditorController extends Controller
             ]);
 
             $background = $backgroundResponse->getBody()->getContents();
-            $logo = File::get(public_path("app.png"));
+            $logo = File::get(public_path("icon.png"));
 
             $imageResponse = $client->post(env("IW_PROVIDER", "https://image-wizard-eight.vercel.app") . "/api/image/overlay?_token={$token}", [
                 'json' => [
                     "baseImageBuffer" => base64_encode($background),
                     "overlayImageBuffer" => base64_encode($logo),
-                    "x" => 340,
-                    "y" => 100
+                    "x" => 240,
+                    "y" => 50
                 ]
             ]);
 
@@ -106,8 +106,8 @@ class ImageEditorController extends Controller
                 'json' => [
                     "baseImageBuffer" => base64_encode($imageResponse->getBody()->getContents()),
                     "overlayImageBuffer" => base64_encode($deploy),
-                    "x" => 240,
-                    "y" => 200
+                    "x" => 280,
+                    "y" => 150
                 ]
             ]);
 
@@ -115,8 +115,8 @@ class ImageEditorController extends Controller
                 'json' => [
                     "baseImageBuffer" => base64_encode($imageResponse->getBody()->getContents()),
                     "overlayImageBuffer" => base64_encode($version),
-                    "x" => 240,
-                    "y" => 250
+                    "x" => 320,
+                    "y" => 150
                 ]
             ]);
 
