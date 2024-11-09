@@ -249,6 +249,7 @@ class ApplicationController extends Controller
     public function addBase64ImageToCanvasComponent($image, $base64String, $position, $size)
     {
         $image = base64_encode($image);
+        $token = Str::random();
 
         if(!is_string($base64String)){
             $base64String = base64_encode($base64String);
@@ -264,7 +265,7 @@ class ApplicationController extends Controller
 
 
         $client = new Client();
-        $response = $client->post(env("IW_PROVIDER", "https://image-wizard-eight.vercel.app") . "/api/image/overlay", [
+        $response = $client->post(env("IW_PROVIDER", "https://image-wizard-eight.vercel.app") . "/api/image/overlay?_token={$token}", [
             'json' => [
                 "baseImageBuffer" => $image,
                 "overlayImageBuffer" => $base64String,
@@ -282,14 +283,14 @@ class ApplicationController extends Controller
 
     public function addTextToImageComponent($image, $text, $position, $colorHex, $size)
     {
-
+        
         $image = base64_encode($image);
-
+        $token = Str::random();
 
         $fontSize = $size['width'];
 
         $client = new Client();
-        $response = $client->post(env("IW_PROVIDER", "https://image-wizard-eight.vercel.app") . "/api/image/add-text", [
+        $response = $client->post(env("IW_PROVIDER", "https://image-wizard-eight.vercel.app") . "/api/image/add-text?_token={$token}", [
             'json' => [
                 "imageBuffer" =>  $image,
                 "fontUrl" => 'https://github.com/googlefonts/NunitoSans/raw/refs/heads/main/fonts/ttf/NunitoSans-Regular.ttf',
