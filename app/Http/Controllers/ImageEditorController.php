@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Str;
 
 class ImageEditorController extends Controller
 {
@@ -24,42 +27,71 @@ class ImageEditorController extends Controller
             'components.*.collors.content' => 'required|string'
         ]);
 
-        if(isset($request->driver)){
-            if($request->driver == "gd"){
+        if (isset($request->driver)) {
+            if ($request->driver == "gd") {
                 return (new ImageWizardController)->buildImageGd($data);
-            } else if($request->driver == "image-wizard"){
+            } else if ($request->driver == "image-wizard") {
                 return (new ImageWizardController)->buildImageIW($data);
             }
         }
 
         return (new ImageWizardController)->buildImageGd($data);
-        
     }
 
-   
+
 
     public function MimeTest()
     {
-        // Cria a imagem com GD
-        $handle = ImageCreateTrueColor(130, 50) or die("Não foi possível criar a imagem");
+        try {
+            // Cria a imagem com GD
+            $handle = ImageCreateTrueColor(130, 50) or die("Não foi possível criar a imagem");
 
-        // Define as cores
-        $bgColor = ImageColorAllocate($handle, 255, 0, 0); // Fundo vermelho
-        $txtColor = ImageColorAllocate($handle, 255, 255, 255); // Texto branco
-        $lineColor = ImageColorAllocate($handle, 0, 0, 0); // Linha preta
+            // Define as cores
+            $bgColor = ImageColorAllocate($handle, 255, 0, 0); // Fundo vermelho
+            $txtColor = ImageColorAllocate($handle, 255, 255, 255); // Texto branco
+            $lineColor = ImageColorAllocate($handle, 0, 0, 0); // Linha preta
 
-        // Preenche o fundo e desenha uma linha e o texto
-        ImageFill($handle, 0, 0, $bgColor);
-        ImageLine($handle, 65, 0, 130, 50, $lineColor);
-        ImageString($handle, 5, 5, 18, "->Image-Storm", $txtColor);
+            // Preenche o fundo e desenha uma linha e o texto
+            ImageFill($handle, 0, 0, $bgColor);
+            ImageLine($handle, 65, 0, 130, 50, $lineColor);
+            ImageString($handle, 5, 5, 18, "->Image-Storm", $txtColor);
 
-        // Armazena a imagem em um buffer de saída
-        ob_start();
-        ImagePng($handle);
-        $imageData = ob_get_clean();
-        ImageDestroy($handle);
+            // Armazena a imagem em um buffer de saída
+            ob_start();
+            ImagePng($handle);
+            $imageData = ob_get_clean();
+            ImageDestroy($handle);
+            // Retorna a imagem com o cabeçalho correto
+            return response($imageData, 200)->header('Content-Type', 'image/png');
+        } catch (\Throwable $th) {
 
-        // Retorna a imagem com o cabeçalho correto
-        return response($imageData, 200)->header('Content-Type', 'image/png');
+            $client = new Client();
+            $token = Str::random();
+            $layout = [
+                "width" => 720,
+                "height" => 300,
+                "color" => "#9b28ed"
+            ];
+
+            $backgroundResponse = $client->post(env("IW_PROVIDER", "https://image-wizard-eight.vercel.app") . "/api/image/create?_token={$token}", [
+                'json' => $layout
+            ]);
+
+            $background = $backgroundResponse->getBody()->getContents();
+            $logo = File::get(public_path("app.png"));
+
+            $logoComponent = [
+                "baseImageBuffer" => base64_encode($background),
+                "overlayImageBuffer" => base64_encode($logo),
+                "x" => 340,
+                "y" => 100
+            ];
+
+            $overlay01Response = $client->post(env("IW_PROVIDER", "https://image-wizard-eight.vercel.app") . "/api/image/create?_token={$token}", [
+                'json' => $logoComponent
+            ]);
+
+            return Response::make($overlay01Response->getBody()->getContents(), 200, ['Content-Type' => 'image/png']);
+        }
     }
 }
