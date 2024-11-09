@@ -24,116 +24,19 @@ class ImageEditorController extends Controller
             'components.*.collors.content' => 'required|string'
         ]);
 
-        $width = $data['sample']['width'];
-        $height = $data['sample']['height'];
-        $backgroundColor = $this->hexToRgb($data['sample']['background']);
-        $image = imagecreatetruecolor($width, $height);
-        $bgColor = imagecolorallocate($image, $backgroundColor['r'], $backgroundColor['g'], $backgroundColor['b']);
-        imagefill($image, 0, 0, $bgColor);
-
-        // Ordena os componentes com base no parâmetro 'overlay' (menor para maior)
-        // usort($data['components'], function ($a, $b) {
-        //     return $a['overlay'] <=> $b['overlay'];
-        // });
-
-        foreach ($data['components'] as $component) {
-            $this->addComponentToCanvas($image, $component);
+        if(isset($request->driver)){
+            if($request->driver == "gd"){
+                return (new ImageWizardController)->buildImageGd($data);
+            } else if($request->driver == "image-wizard"){
+                return (new ImageWizardController)->buildImageIW($data);
+            }
         }
 
-        ob_start();
-        imagepng($image);
-        $imageData = ob_get_clean();
-        imagedestroy($image);
-
-        return Response::make($imageData, 200, ['Content-Type' => 'image/png']);
+        return (new ImageWizardController)->buildImageGd($data);
+        
     }
 
-    private function addComponentToCanvas($image, $component)
-    {
-        $position = $component['position'];
-        $size = $component['size'];
-        $content = $component['content'];
-        $collor = $component['collors']['content'] ?? "#000000";
-
-        if ($content['type'] === 'text') {
-            $this->addTextToImage($image, $content['content'], $position, $collor, $size);
-        } elseif ($content['type'] === 'image/png' && str_starts_with($content['content'], 'data:image')) {
-            $this->addBase64ImageToCanvas($image, $content['content'], $position, $size);
-        } elseif ($content['type'] === 'image/png' && filter_var($content['content'], FILTER_VALIDATE_URL)) {
-            $this->addUrlImageToCanvas($image, $content['content'], $position, $size);
-        }
-    }
-
-    private function addTextToImage($image, $text, $position, $colorHex, $size)
-    {
-        $color = $this->hexToRgb($colorHex);
-        $textColor = imagecolorallocate($image, $color['r'], $color['g'], $color['b']);
-        $fontPath = public_path('fonts/Nunito_Sans/index.ttf');
-        $fontSize = $size['width'];
-
-        imagettftext($image, $fontSize, 0, $position['x'], $position['y'] + $fontSize, $textColor, $fontPath, $text);
-    }
-
-    private function addBase64ImageToCanvas($image, $base64String, $position, $size)
-    {
-        // Decodificar Base64 e criar a imagem a partir da string
-        $imageData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $base64String));
-        if (!$imageData) {
-            return; // Caso a decodificação falhe
-        }
-
-        $overlay = imagecreatefromstring($imageData);
-        if (!$overlay) {
-            return; // Verificar se a criação da imagem falhou
-        }
-
-        // Redimensionar a imagem de sobreposição
-        $resizedOverlay = imagescale($overlay, $size['width'], $size['height']);
-        if ($resizedOverlay) {
-            // Preservar a transparência para imagens PNG
-            imagealphablending($image, true);
-            imagesavealpha($image, true);
-            imagecopy($image, $resizedOverlay, $position['x'], $position['y'], 0, 0, $size['width'], $size['height']);
-            imagedestroy($resizedOverlay);
-        }
-
-        imagedestroy($overlay);
-    }
-
-    private function addUrlImageToCanvas($image, $url, $position, $size)
-    {
-        // Tentar criar a imagem a partir da URL
-        $overlay = @imagecreatefrompng($url);
-        if (!$overlay) {
-            return; // Caso a criação da imagem falhe
-        }
-
-        // Redimensionar a imagem de sobreposição
-        $resizedOverlay = imagescale($overlay, $size['width'], $size['height']);
-        if ($resizedOverlay) {
-            // Preservar a transparência para imagens PNG
-            imagealphablending($image, true);
-            imagesavealpha($image, true);
-            imagecopy($image, $resizedOverlay, $position['x'], $position['y'], 0, 0, $size['width'], $size['height']);
-            imagedestroy($resizedOverlay);
-        }
-
-        imagedestroy($overlay);
-    }
-
-    private function hexToRgb($hex)
-    {
-        $hex = str_replace('#', '', $hex);
-        if (strlen($hex) == 3) {
-            $hex = $hex[0] . $hex[0] . $hex[1] . $hex[1] . $hex[2] . $hex[2];
-        }
-
-        return [
-            'r' => hexdec(substr($hex, 0, 2)),
-            'g' => hexdec(substr($hex, 2, 2)),
-            'b' => hexdec(substr($hex, 4, 2))
-        ];
-    }
+   
 
     public function MimeTest()
     {

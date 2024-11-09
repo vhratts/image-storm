@@ -18,6 +18,7 @@
         "APP_KEY": "base64:JOLBZs5l2VyYJCry9DLYUQjFxmoDBHF8e9Bdft4t6g0=",
         "APP_URL": "https://image-storm.vercel.app",
         "ASSET_URL": "https://image-storm.vercel.app/assets",
+        "IW_PROVIDER": "https://image-wizard-eight.vercel.app",
         "CACHE_STORE": "database",
         "DB_CONNECTION": "pgsql",
         "DB_URL": "postgres://default:Se3yL5QvGqEm@ep-delicate-recipe-a4lcnxt2.us-east-1.aws.neon.tech:5432/verceldb?sslmode=require",
