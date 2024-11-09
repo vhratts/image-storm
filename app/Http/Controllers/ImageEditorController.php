@@ -68,9 +68,9 @@ class ImageEditorController extends Controller
             $client = new Client();
             $token = Str::random();
 
-            $enviromet  = ($client->get("https://img.shields.io/badge/enviroment-Laravel-red"))->getBody()->getContents();
-            $deploy     = ($client->get("https://img.shields.io/badge/deployment-Vercel-black"))->getBody()->getContents();
-            $version     = ($client->get("https://img.shields.io/badge/Version-0.0.3-green"))->getBody()->getContents();
+            $enviromet  = ($client->get("https://img.shields.io/badge/enviroment-Laravel-red.png"))->getBody()->getContents();
+            $deploy     = ($client->get("https://img.shields.io/badge/deployment-Vercel-black.png"))->getBody()->getContents();
+            $version     = ($client->get("https://img.shields.io/badge/Version-0.0.3-green.png"))->getBody()->getContents();
 
 
             $backgroundResponse = $client->post(env("IW_PROVIDER", "https://image-wizard-eight.vercel.app") . "/api/image/create?_token={$token}", [
