@@ -269,7 +269,7 @@ class ApplicationController extends Controller
         return null;
     }
 
-    public function addTextToImageComponent($image, $text, $position, $colorHex, $size)
+    public function addTextToImageComponent($image, $text, $position, $colorHex, $size, $fontUrl = "https://github.com/googlefonts/NunitoSans/raw/refs/heads/main/fonts/ttf/NunitoSans-Regular.ttf")
     {
         
         $image = base64_encode($image);
@@ -281,10 +281,10 @@ class ApplicationController extends Controller
         $response = $client->post(env("IW_PROVIDER", "https://image-wizard-eight.vercel.app") . "/api/image/add-text?_token={$token}", [
             'json' => [
                 "imageBuffer" =>  $image,
-                "fontUrl" => 'https://github.com/googlefonts/NunitoSans/raw/refs/heads/main/fonts/ttf/NunitoSans-Regular.ttf',
+                "fontUrl" => $fontUrl,
                 "text" => $text,
                 "color" => $colorHex,
-                "fontSize" => $size['width'],
+                "fontSize" => $fontSize,
                 "x" => $position['x'],
                 "y" => $position['y'] + $fontSize,
             ]
