@@ -88,7 +88,7 @@ class ImageEditorController extends Controller
                 'json' => [
                     "baseImageBuffer" => base64_encode($background),
                     "overlayImageBuffer" => base64_encode($logo),
-                    "x" => 240,
+                    "x" => 150,
                     "y" => 50
                 ]
             ]);
@@ -97,7 +97,7 @@ class ImageEditorController extends Controller
                 'json' => [
                     "baseImageBuffer" => base64_encode($imageResponse->getBody()->getContents()),
                     "overlayImageBuffer" => base64_encode($enviromet),
-                    "x" => 240,
+                    "x" => 200,
                     "y" => 150
                 ]
             ]);
@@ -106,7 +106,7 @@ class ImageEditorController extends Controller
                 'json' => [
                     "baseImageBuffer" => base64_encode($imageResponse->getBody()->getContents()),
                     "overlayImageBuffer" => base64_encode($deploy),
-                    "x" => 280,
+                    "x" => 250,
                     "y" => 150
                 ]
             ]);
