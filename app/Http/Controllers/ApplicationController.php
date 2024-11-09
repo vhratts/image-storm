@@ -12,6 +12,14 @@ use Symfony\Component\Uid\BinaryUtil;
 
 class ApplicationController extends Controller
 {
+
+    public $NunitoSans = [
+        'default' => "http://fonts.gstatic.com/s/abeezee/v9/mE5BOuZKGln_Ex0uYKpIaw.ttf",
+        'regular' => "https://github.com/googlefonts/NunitoSans/blob/main/fonts/ttf/NunitoSans-Regular.ttf",
+        'light' => "https://github.com/googlefonts/NunitoSans/blob/main/fonts/ttf/NunitoSans-ExtraLight.ttf",
+        'bold' => "https://github.com/googlefonts/NunitoSans/blob/main/fonts/ttf/NunitoSans-ExtraBold.ttf",
+    ];
+
     public function ApiAssetController($any = '/', Request $request)
     {
         if (!Str::contains($any, '.')) {
@@ -230,7 +238,8 @@ class ApplicationController extends Controller
         }
     }
 
-    public function addUrlImageToCanvasComponent($image, $url, $position, $size) {
+    public function addUrlImageToCanvasComponent($image, $url, $position, $size)
+    {
         $client = new Client();
 
         $response = $client->get($url);
@@ -240,7 +249,6 @@ class ApplicationController extends Controller
             $imageEncoded = base64_encode($imageContent);
 
             return $this->addBase64ImageToCanvasComponent($image, $imageEncoded, $position, $size);
-
         }
 
         return null;
@@ -271,33 +279,26 @@ class ApplicationController extends Controller
 
     public function addTextToImageComponent($image, $text, $position, $colorHex, $size, $fontUrl = "https://github.com/googlefonts/NunitoSans/raw/refs/heads/main/fonts/ttf/NunitoSans-Regular.ttf")
     {
-        
+
         $image = base64_encode($image);
         $token = Str::random();
-
         $fontSize = $size['width'];
-
+        
         $client = new Client();
-        $response = $client->post(env("IW_PROVIDER", "https://image-wizard-eight.vercel.app") . "/api/image/add-text?_token={$token}", [
+        $response = $client->post(env("IW_PROVIDER", "https://image-wizard-eight.vercel.app") . "/api/image/text-to-image?_token={$token}", [
             'json' => [
-                "imageBuffer" =>  $image,
-                "fontUrl" => $fontUrl,
                 "text" => $text,
-                "color" => $colorHex,
+                "fontUrl" => $fontUrl ?? $this->NunitoSans['default'],
                 "fontSize" => $fontSize,
-                "x" => $position['x'],
-                "y" => $position['y'] + $fontSize,
+                "fontColor" => $colorHex,
             ]
         ]);
 
-        if ($response->getStatusCode() === 200) {
-            return $response->getBody()->getContents();
-        }
-
-        return null;
+        return $this->addBase64ImageToCanvasComponent($image, base64_encode($response->getBody()->getContents()), $position, $size);
     }
 
-    private function resizeImage(string $imageBase64, int $width, int $height) {
+    private function resizeImage(string $imageBase64, int $width, int $height)
+    {
         $client = new Client();
         $response = $client->post(env("IW_PROVIDER", "https://image-wizard-eight.vercel.app") . "/api/image/resize", [
             'json' => [
