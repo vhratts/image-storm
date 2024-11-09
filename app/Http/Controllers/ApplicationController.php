@@ -280,10 +280,12 @@ class ApplicationController extends Controller
     public function addTextToImageComponent($image, $text, $position, $colorHex, $size, $fontUrl = "https://github.com/googlefonts/NunitoSans/raw/refs/heads/main/fonts/ttf/NunitoSans-Regular.ttf")
     {
 
-        $image = base64_encode($image);
+        // $image = base64_encode($image);
         $token = Str::random();
         $fontSize = $size['width'];
+
         
+
         $client = new Client();
         $response = $client->post(env("IW_PROVIDER", "https://image-wizard-eight.vercel.app") . "/api/image/text-to-image?_token={$token}", [
             'json' => [

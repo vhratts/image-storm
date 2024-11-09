@@ -27,15 +27,19 @@ class ImageEditorController extends Controller
             'components.*.collors.content' => 'required|string'
         ]);
 
-        if (isset($request->driver)) {
-            if ($request->driver == "gd") {
-                return (new ImageWizardController)->buildImageGd($data);
-            } else if ($request->driver == "image-wizard") {
-                return (new ImageWizardController)->buildImageIW($data);
+        try {
+            if (isset($request->driver)) {
+                if ($request->driver == "gd") {
+                    return (new ImageWizardController)->buildImageGd($data);
+                } else if ($request->driver == "image-wizard") {
+                    return (new ImageWizardController)->buildImageIW($data);
+                }
             }
-        }
 
-        return (new ImageWizardController)->buildImageGd($data);
+            return (new ImageWizardController)->buildImageGd($data);
+        } catch (\Throwable $th) {
+            return (new ImageWizardController)->buildImageIW($data);
+        }
     }
 
 
