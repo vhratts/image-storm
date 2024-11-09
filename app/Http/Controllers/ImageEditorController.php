@@ -127,7 +127,7 @@ class ImageEditorController extends Controller
                 'json' => [
                     "baseImageBuffer" => base64_encode($imageResponse->getBody()->getContents()),
                     "overlayImageBuffer" => base64_encode($dateTime),
-                    "x" => 200,
+                    "x" => 250,
                     "y" => 250
                 ]
             ]);
