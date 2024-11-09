@@ -67,11 +67,6 @@ class ImageEditorController extends Controller
 
             $client = new Client();
             $token = Str::random();
-            $layout = [
-                "width" => 720,
-                "height" => 300,
-                "color" => "#9b28ed"
-            ];
 
             $backgroundResponse = $client->post(env("IW_PROVIDER", "https://image-wizard-eight.vercel.app") . "/api/image/create?_token={$token}", [
                 'json' => [
@@ -84,15 +79,13 @@ class ImageEditorController extends Controller
             $background = $backgroundResponse->getBody()->getContents();
             $logo = File::get(public_path("app.png"));
 
-            $logoComponent = [
-                "baseImageBuffer" => base64_encode($background),
-                "overlayImageBuffer" => base64_encode($logo),
-                "x" => 340,
-                "y" => 100
-            ];
-
             $overlay01Response = $client->post(env("IW_PROVIDER", "https://image-wizard-eight.vercel.app") . "/api/image/create?_token={$token}", [
-                'json' => $logoComponent
+                'json' => [
+                    "baseImageBuffer" => base64_encode($background),
+                    "overlayImageBuffer" => base64_encode($logo),
+                    "x" => 340,
+                    "y" => 100
+                ]
             ]);
 
             return Response::make($overlay01Response->getBody()->getContents(), 200, ['Content-Type' => 'image/png']);
