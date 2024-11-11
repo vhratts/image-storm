@@ -12,20 +12,67 @@ class ImageEditorController extends Controller
 {
     public function editImage(Request $request)
     {
-        $data = $request->validate([
-            'sample.width' => 'required|integer',
-            'sample.height' => 'required|integer',
-            'sample.background' => 'required|string',
-            'components' => 'required|array',
-            'components.*.position.x' => 'required|integer',
-            'components.*.position.y' => 'required|integer',
-            'components.*.size.width' => 'required|integer',
-            'components.*.size.height' => 'required|integer',
-            'components.*.content.type' => 'required|string',
-            'components.*.content.content' => 'required|string',
-            'components.*.collors.background' => 'required|string',
-            'components.*.collors.content' => 'required|string'
-        ]);
+        if (isset($request['payload-type'])) {
+            if ($request['payload-type'] == 'simple') {
+                $data = $request->validate([
+                    's.w' => 'required|integer',
+                    's.h' => 'required|integer',
+                    's.b' => 'required|string',
+                    'c' => 'required|array',
+                    'c.*.p.x' => 'required|integer',
+                    'c.*.p.y' => 'required|integer',
+                    'c.*.s.w' => 'required|integer',
+                    'c.*.s.h' => 'required|integer',
+                    'c.*.cnt.t' => 'required|string',
+                    'c.*.cnt.c' => 'required|string',
+                    'c.*.clrs.b' => 'required|string',
+                    'c.*.clrs.c' => 'required|string'
+                ]);
+
+                $components = [];
+                
+                foreach($data['c'] as $key => $item){
+                    $components[] = [
+                        'position' => $item['p'],
+                        'size' => [
+                            'width' => $item['s']['w'],
+                            'height' => $item['s']['h'],
+                        ],
+                        'collors' => [
+                            'background' => $item['clrs']['b'],
+                            'background' => $item['clrs']['b'],
+                        ],
+                        'content' => [
+                            'type' => $item['cnt']['t'],
+                            'content' => $item['cnt']['c'],
+                        ]
+                    ];
+                }
+
+                $data = [
+                    'sample' => [
+                        'width' => $request->s->w,
+                        'height' => $request->s->h,
+                    ],
+                    'components' => $components
+                ];
+            }
+        } else {
+            $data = $request->validate([
+                'sample.width' => 'required|integer',
+                'sample.height' => 'required|integer',
+                'sample.background' => 'required|string',
+                'components' => 'required|array',
+                'components.*.position.x' => 'required|integer',
+                'components.*.position.y' => 'required|integer',
+                'components.*.size.width' => 'required|integer',
+                'components.*.size.height' => 'required|integer',
+                'components.*.content.type' => 'required|string',
+                'components.*.content.content' => 'required|string',
+                'components.*.collors.background' => 'required|string',
+                'components.*.collors.content' => 'required|string'
+            ]);
+        }
 
         try {
             if (isset($request->driver)) {
@@ -42,7 +89,8 @@ class ImageEditorController extends Controller
         }
     }
 
-    public function CreateImage(Request $request) {
+    public function CreateImage(Request $request)
+    {
         $request->validate([
             'payload' => 'required'
         ]);
