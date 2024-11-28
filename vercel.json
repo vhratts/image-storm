@@ -1,20 +1,8 @@
 {
-    "functions": {
-        "api/*.php": {
-            "runtime": "vercel-php@0.7.2",
-            "memory": 1024,
-            "maxDuration": 60
-        }
-    },
-    "routes": [
-        {
-            "src": "/(.*)",
-            "dest": "/api/index.php"
-        }
-    ],
+
     "headers": [
         {
-            "source": "/(.*)",
+            "source": "/api/(.*)",
             "headers": [
                 {
                     "key": "Access-Control-Allow-Credentials",
@@ -33,6 +21,19 @@
                     "value": "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version"
                 }
             ]
+        }
+    ],
+    "functions": {
+        "api/*.php": {
+            "runtime": "vercel-php@0.7.2",
+            "memory": 1024,
+            "maxDuration": 60
+        }
+    },
+    "routes": [
+        {
+            "src": "/(.*)",
+            "dest": "/api/index.php"
         }
     ],
     "env": {
