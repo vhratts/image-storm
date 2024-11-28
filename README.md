@@ -616,4 +616,4 @@ $payload = [
 ## Observações
 
 -   A ordem de sobreposição dos componentes depende do valor de `overlay`, em que números mais altos indicam camadas superiores.
--   Certifique-se de fornecer URLs válidos ou strings de Base64 corretamente formatadas para que as imagens sejam renderizadas com sucesso.
+-   Certifique-se de fornecer URLs válidos ou strings de Base64 corretamente formatadas para que as imagens sejam renderizadas com sucesso!
