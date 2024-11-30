@@ -57,6 +57,12 @@ class ImageWizardController extends Controller
         return Response::make($responseImage, 200, ['Content-Type' => 'image/png', 'Cache-Control' => 'max-age=1313991; s-maxage=1314000, stale-while-revalidate=1314000']);
     }
 
+    public function buildImageB64(array $data){
+        $imageData = $this->buildImageIW($data);
+        $base64 = base64_decode($imageData);
+        return "data:image/png;base64,{$base64}";
+    }
+
     protected function createLayer(string $width, string $height, string $collor = "#ffff")
     {
         try {

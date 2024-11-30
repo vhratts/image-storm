@@ -80,7 +80,9 @@ class ImageEditorController extends Controller
                     return (new ImageWizardController)->buildImageGd($data);
                 } else if ($request->driver == "image-wizard") {
                     return (new ImageWizardController)->buildImageIW($data);
-                }
+                } else if ($request->driver == "b64") {
+                    return (new ImageWizardController)->buildImageB64($data);
+                } 
             }
 
             return (new ImageWizardController)->buildImageGd($data);
