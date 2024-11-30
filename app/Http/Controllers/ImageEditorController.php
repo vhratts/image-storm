@@ -30,8 +30,8 @@ class ImageEditorController extends Controller
                 ]);
 
                 $components = [];
-                
-                foreach($data['c'] as $key => $item){
+
+                foreach ($data['c'] as $key => $item) {
                     $components[] = [
                         'position' => $item['p'],
                         'size' => [
@@ -82,11 +82,17 @@ class ImageEditorController extends Controller
                     return (new ImageWizardController)->buildImageIW($data);
                 } else if ($request->driver == "b64") {
                     return (new ImageWizardController)->buildImageB64($data);
-                } 
+                }
             }
 
             return (new ImageWizardController)->buildImageGd($data);
         } catch (\Throwable $th) {
+            if ($request->driver == "image-wizard") {
+                return (new ImageWizardController)->buildImageIW($data);
+            } else if ($request->driver == "b64") {
+                return (new ImageWizardController)->buildImageB64($data);
+            }
+
             return (new ImageWizardController)->buildImageIW($data);
         }
     }
